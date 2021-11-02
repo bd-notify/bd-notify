@@ -1,0 +1,35 @@
+default:
+  notify: True
+  notify-title: "{toy_type} in stock at Bad Dragon!"
+  notify-text: "The {toy_type} {toy_name} has just come in stock for ${toy_price}. It's a {stock_type}."
+
+  audio: False
+  audio-path: Null
+  check-time: 60
+
+audio:
+  notify: True
+  notify-title: "{toy_type} in stock at Bad Dragon!"
+  notify-text: "The {toy_type} {toy_name} has just come in stock for ${toy_price}. It's a {stock_type}."
+
+  audio: True
+  audio-path: "./alarm.mp3"
+  check-time: 60
+
+discreet:
+  notify: True
+  notify-title: "An item you want just went on sale!"
+  notify-text: "Check our website for more details!"
+
+  audio: False
+  audio-path: Null
+  check-time: 60
+
+discreet-audio:
+  notify: True
+  notify-title: "An item you want just went on sale!"
+  notify-text: "Check our website for more details!"
+
+  audio: True
+  audio-path: "./alarm.mp3"
+  check-time: 60
