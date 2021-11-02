@@ -30,25 +30,6 @@ CATEGORIES = {
 
 
 def main():
-    # Basic operation:
-    # ./bd-notify.py -mw to use the default email config and notify upon a masturbator or wearable becoming available
-    # ./bd-notify.py nix --config secondary to use the secondary email config and notify upon a nix becoming available
-    # Configuration stored in ./bd-notify-config.yml
-    # urls: https://bad-dragon.com/api/inventory-toys?type[]=ready_made&price[min]=0&price[max]=300&firmnessValues[]=4&firmnessValues[]=9&firmnessValues[]=121&firmnessValues[]=12&firmnessValues[]=123&firmnessValues[]=11&firmnessValues[]=124&sizes[]=1&sizes[]=2&cumtube=13&sort[field]=price&&sort[direction]=asc&page=1&limit=60
-    #
-    payload = {
-        'type[]': ['ready_made'],
-        'price[min]': 0,
-        'price[max]': 300,
-        'firmnessValues[]': [4, 9, 121, 12, 123, 11, 124],
-        'sizes[]': [1, 2],
-        'cumtube': 13,
-        'sort[field]': 'price',
-        'sort[direction]': 'asc',
-        'page': 1,
-        'limit': 60
-    }
-
     parser = argparse.ArgumentParser(
         description="Automatically send a push notification upon a certain bad dragon toy coming in stock.",
         usage="bd-notifier [sku] [options]")
