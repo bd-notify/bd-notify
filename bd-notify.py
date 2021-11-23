@@ -218,7 +218,7 @@ class BDNotify(object):
         # Get the sku of the toy, then send a request to https://bad-dragon.com/api/products/[sku] to get the type.
         toy_name = toy["sku"]
 
-        response = json.loads(requests.get(SKU_URL + "/" + toy_name))
+        response = json.loads(requests.get(SKU_URL + "/" + toy_name).text)
 
         if self.args["verbose"]:
             print(response)
