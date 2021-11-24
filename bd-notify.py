@@ -4,7 +4,10 @@ import yaml
 import argparse
 import datetime
 import json
+import boto3
+import sys
 
+from botocore.exceptions import ClientError
 from apscheduler.schedulers.blocking import BlockingScheduler
 from playsound import playsound
 from plyer import notification
@@ -196,6 +199,9 @@ class BDNotify(object):
         if self.config["audio"]:
             self.play_configured_sound()
 
+        if "sns-publish" in self.config and self.config["sns-publish"]:
+            self.push_sns_notification(**toy)
+
 
     # Returns None if no toys of the matching description are found, returns a dict of
     # properties about a single one of the toys found otherwise (the first is normally used)
@@ -262,6 +268,49 @@ class BDNotify(object):
     def play_configured_sound(self):
         if self.config["audio-path"] is not None:
             playsound(self.config["audio-path"])
+
+    def push_sns_notification(self, toy_type, toy_name, toy_price, stock_type):
+        args = {
+            "toy_type": toy_type,
+            "toy_name": toy_name,
+            "toy_price": toy_price,
+            "stock_type": stock_type
+        }
+        
+        # Construct title & body of SNS notification
+        title = self.config["notify-title"].format(**args)
+        body = self.config["notify-text"].format(**args)
+
+        # Assume IAM role
+        sts_client = boto3.client('sts')
+        assumed_role_object = sts_client.assume_role(
+            RoleArn=self.config["sns-role"],
+            RoleSessionName="NotificationSession"
+        )
+
+        credentials = assumed_role_object["Credentials"]
+
+        sns = boto3.client(
+            'sns',
+            aws_access_key_id = credentials["AccessKeyId"],
+            aws_secret_access_key = credentials["SecretAccessKey"],
+            aws_session_token = credentials["SessionToken"]
+        )
+
+        try:
+            sns.publish(
+                TopicArn = self.config["sns-topic"],
+                Subject = title,
+                Message = body
+            )
+        except ClientError as e:
+            print(f"Could not publish message to topic: {str(e)}")
+            raise e
+        
+        print(f"Message published to SNS topic. Title: {title} --- Body: {body}")
+
+        # Exit so we don't spam the user with SMS notifications.
+        sys.exit()
 
 
 if __name__ == '__main__':

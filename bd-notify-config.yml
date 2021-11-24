@@ -33,3 +33,16 @@ discreet-audio:
   audio: True
   audio-path: "./alarm.mp3"
   check-time: 60
+
+discreet-sms:
+  notify: False
+  notify-title: "dummy"
+  notify-text: "An item you want just went on sale! Check our website for more details!"
+
+  audio: False
+  audio-path: Null
+  check-time: 60
+
+  sns-publish: True
+  sns-topic: "<SNS Topic ARN>"
+  sns-role: "<SNS Publish Role ARN>"
